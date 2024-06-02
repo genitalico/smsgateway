@@ -54,6 +54,9 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        val smsService = SmsService(this)
+        smsService.checkSmsPermissionAndSend()
     }
 }
 

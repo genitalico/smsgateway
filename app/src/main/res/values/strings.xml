@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SmsGateway</string>
+    <string name="sms_permission_granted">Permiso para enviar SMS concedido</string>
+    <string name="sms_permission_denied">Permiso para enviar SMS denegado</string>
 </resources>
