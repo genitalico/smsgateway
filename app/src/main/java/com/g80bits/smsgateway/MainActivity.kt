@@ -1,5 +1,6 @@
 package com.g80bits.smsgateway
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -66,6 +68,7 @@ fun Content(
     padding: PaddingValues = PaddingValues(),
     viewModel: MainViewModel
 ) {
+    val context = LocalContext.current
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -78,6 +81,8 @@ fun Content(
             Button(
                 onClick = {
                     println("Conectando")
+                    val serviceIntent = Intent(context, ForegroundService::class.java)
+                    context.startForegroundService(serviceIntent)
                 },
                 content = {
                     Text(text = "Conectar WebSocket")
@@ -86,6 +91,8 @@ fun Content(
             Button(
                 onClick = {
                     println("Desconectando")
+                    val serviceIntent = Intent(context, ForegroundService::class.java)
+                    context.stopService(serviceIntent)
                 },
                 content = {
                     Text(text = "Desconectar WebSocket")
