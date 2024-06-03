@@ -3,4 +3,7 @@
     <string name="sms_permission_granted">Permiso para enviar SMS concedido</string>
     <string name="sms_permission_denied">Permiso para enviar SMS denegado</string>
     <string name="fg_service_context_text">Socket conectado y enviando sms</string>
+    <string name="extra_url">EXTRA_URL</string>
+    <string name="extra_stop_socket">STOP_SOCKET</string>
+    <string name="foreground_channel_id">FOREGROUND_CHANNEL_ID</string>">
 </resources>

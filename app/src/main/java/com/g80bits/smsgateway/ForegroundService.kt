@@ -10,24 +10,35 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 
 class ForegroundService : Service() {
-
-    companion object {
-        const val CHANNEL_ID = "ForegroundServiceChannel"
-    }
-
+    private var webSocketManager: WebSocketManager? = null
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle(this.getString(R.string.app_name))
-            .setContentText(this.getString(R.string.fg_service_context_text))
-            .setSmallIcon(R.drawable.ic_launcher_background)
-            .build()
+        val url = intent?.getStringExtra(this.getString(R.string.extra_url)) ?: ""
+        val stop =
+            intent?.getBooleanExtra(this.getString(R.string.extra_stop_socket), false) ?: false
 
-        startForeground(1, notification)
+        if (stop && webSocketManager != null) {
+            webSocketManager?.stop()
+        } else {
+            webSocketManager = WebSocketManager(listener = object : MessageListener {
+                override fun onMessage(message: SmsModel) {
+                    println(message)
+                }
+            })
+
+            val isConnected = webSocketManager?.start(url)
+            if (isConnected == false) {
+                stopSelf()
+                return START_NOT_STICKY
+
+            }
+        }
+
+        createNotification()
 
         return START_STICKY
     }
@@ -36,9 +47,20 @@ class ForegroundService : Service() {
         TODO("Not yet implemented")
     }
 
+    private fun createNotification() {
+        val notification: Notification =
+            NotificationCompat.Builder(this, this.getString(R.string.foreground_channel_id))
+                .setContentTitle(this.getString(R.string.app_name))
+                .setContentText(this.getString(R.string.fg_service_context_text))
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .build()
+
+        startForeground(1, notification)
+    }
+
     private fun createNotificationChannel() {
         val serviceChannel = NotificationChannel(
-            CHANNEL_ID,
+            this.getString(R.string.foreground_channel_id),
             "Foreground Service Channel",
             NotificationManager.IMPORTANCE_DEFAULT
         )

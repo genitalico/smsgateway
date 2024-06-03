@@ -1,5 +1,6 @@
 package com.g80bits.smsgateway
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -81,8 +82,8 @@ fun Content(
             Button(
                 onClick = {
                     println("Conectando")
-                    val serviceIntent = Intent(context, ForegroundService::class.java)
-                    context.startForegroundService(serviceIntent)
+                    startService(true, context, viewModel)
+
                 },
                 content = {
                     Text(text = "Conectar WebSocket")
@@ -91,8 +92,7 @@ fun Content(
             Button(
                 onClick = {
                     println("Desconectando")
-                    val serviceIntent = Intent(context, ForegroundService::class.java)
-                    context.stopService(serviceIntent)
+                    startService(false, context, viewModel)
                 },
                 content = {
                     Text(text = "Desconectar WebSocket")
@@ -100,6 +100,20 @@ fun Content(
             )
         }
     )
+}
+
+private fun startService(start: Boolean, context: Context, viewModel: MainViewModel) {
+
+    if (start) {
+        val serviceIntent = Intent(context, ForegroundService::class.java)
+        serviceIntent.putExtra(context.getString(R.string.extra_url), viewModel.urlText)
+        context.startService(serviceIntent)
+    } else {
+        val serviceIntent = Intent(context, ForegroundService::class.java)
+        serviceIntent.putExtra(context.getString(R.string.extra_stop_socket), true)
+        context.startService(serviceIntent)
+        context.stopService(serviceIntent)
+    }
 }
 
 @Composable
