@@ -18,6 +18,7 @@ class ForegroundService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val smsService = SmsService(this)
         val url = intent?.getStringExtra(this.getString(R.string.extra_url)) ?: ""
+        val id = intent?.getStringExtra(this.getString(R.string.extra_id)) ?: ""
         val stop =
             intent?.getBooleanExtra(this.getString(R.string.extra_stop_socket), false) ?: false
 
@@ -32,7 +33,7 @@ class ForegroundService : Service() {
                 }
             })
 
-            val isConnected = webSocketManager?.start(url)
+            val isConnected = webSocketManager?.start(url, id)
             if (isConnected == false) {
                 stopSelf()
                 return START_NOT_STICKY

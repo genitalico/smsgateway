@@ -18,10 +18,10 @@ class WebSocketManager(private val listener: MessageListener) {
     private var webSocket: WebSocket? = null
     private var connectionStatus: CompletableFuture<Boolean>? = null
 
-    fun start(url: String): Boolean {
+    fun start(url: String, id: String): Boolean {
         return try {
             connectionStatus = CompletableFuture<Boolean>()
-            val request = Request.Builder().url("ws://$url").build()
+            val request = Request.Builder().url("ws://$url?id=$id").build()
             webSocket = client.newWebSocket(request, MyWebSocketListener(listener))
             return connectionStatus!!.get()
         } catch (e: Exception) {

@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.g80bits.smsgateway.ui.theme.SmsGatewayTheme
+import java.util.UUID
 
 
 class MainViewModel : ViewModel() {
@@ -36,7 +37,14 @@ class MainViewModel : ViewModel() {
         private set
 
     fun onUrlTextChange(newText: String) {
-        urlText = newText
+        urlText = newText.trim()
+    }
+
+    var id by mutableStateOf("")
+        private set
+
+    fun onIdChange(newText: String) {
+        id = newText
     }
 }
 
@@ -78,6 +86,8 @@ fun Content(
         content = {
             WebSocketUrlInput(viewModel = viewModel)
             Spacer(modifier = Modifier.height(16.dp))
+            Text(text = "ID: ${viewModel.id}")
+            Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
                     println("Conectando")
@@ -103,15 +113,22 @@ fun Content(
 
 private fun startService(start: Boolean, context: Context, viewModel: MainViewModel) {
 
+    if (viewModel.urlText.isEmpty()) {
+        return
+    }
+
     if (start) {
+        viewModel.onIdChange(UUID.randomUUID().toString())
         val serviceIntent = Intent(context, ForegroundService::class.java)
         serviceIntent.putExtra(context.getString(R.string.extra_url), viewModel.urlText)
+        serviceIntent.putExtra(context.getString(R.string.extra_id), viewModel.id)
         context.startService(serviceIntent)
     } else {
         val serviceIntent = Intent(context, ForegroundService::class.java)
         serviceIntent.putExtra(context.getString(R.string.extra_stop_socket), true)
         context.startService(serviceIntent)
         context.stopService(serviceIntent)
+        viewModel.onIdChange("")
     }
 }
 

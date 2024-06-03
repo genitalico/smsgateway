@@ -9,4 +9,5 @@
     <string name="read_phone_permission_granted">Read phone state permission granted</string>
     <string name="read_phone_permission_denied">Read phone state permission denied</string>
     <string name="all_permissions">All permissions granted</string>
+    <string name="extra_id">EXTRA_ID</string>
 </resources>
