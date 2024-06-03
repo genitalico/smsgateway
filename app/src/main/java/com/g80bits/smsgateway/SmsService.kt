@@ -1,49 +1,29 @@
 package com.g80bits.smsgateway
 
+import android.content.Context
 import android.content.pm.PackageManager
-import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.result.contract.ActivityResultContracts
+import android.telephony.SmsManager
+import android.telephony.SubscriptionManager
 import androidx.core.content.ContextCompat
 
-class SmsService(private val activity: ComponentActivity) {
+class SmsService(private val context: Context) {
 
-    private val permissionStr: String = "android.permission.SEND_SMS"
+    fun sendSms(message: SmsModel) {
 
-    private val requestSmsPermissionLauncher =
-        activity.registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-            if (isGranted) {
-                Toast.makeText(
-                    activity,
-                    activity.getString(R.string.sms_permission_granted),
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
-            } else {
-                Toast.makeText(
-                    activity,
-                    activity.getString(R.string.sms_permission_denied),
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
-            }
-        }
+        if (ContextCompat.checkSelfPermission(
+                context,
+                "android.permission.SEND_SMS"
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
 
-    fun checkSmsPermissionAndSend() {
-        when {
-            ContextCompat.checkSelfPermission(
-                activity,
-                permissionStr
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                Toast.makeText(
-                    activity,
-                    activity.getString(R.string.sms_permission_granted),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
-            else -> {
-                requestSmsPermissionLauncher.launch(permissionStr)
+            if (message.number.isNotEmpty() && message.text.isNotEmpty()) {
+                val subscriptionManager =
+                    context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as SubscriptionManager
+                val subscriptionId =
+                    subscriptionManager.activeSubscriptionInfoList[0].subscriptionId
+                val smsManager = context.getSystemService(SmsManager::class.java)
+                    .createForSubscriptionId(subscriptionId)
+                smsManager.sendTextMessage(message.number, null, message.text, null, null)
             }
         }
     }

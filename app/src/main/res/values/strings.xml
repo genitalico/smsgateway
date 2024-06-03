@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">SmsGateway</string>
-    <string name="sms_permission_granted">Permiso para enviar SMS concedido</string>
-    <string name="sms_permission_denied">Permiso para enviar SMS denegado</string>
-    <string name="fg_service_context_text">Socket conectado y enviando sms</string>
+    <string name="sms_permission_granted">SMS permission granted</string>
+    <string name="sms_permission_denied">SMS permission denied</string>
+    <string name="fg_service_context_text">Socket connected and sending SMS</string>
     <string name="extra_url">EXTRA_URL</string>
     <string name="extra_stop_socket">STOP_SOCKET</string>
-    <string name="foreground_channel_id">FOREGROUND_CHANNEL_ID</string>">
+    <string name="foreground_channel_id">FOREGROUND_CHANNEL_ID</string>
+    <string name="read_phone_permission_granted">Read phone state permission granted</string>
+    <string name="read_phone_permission_denied">Read phone state permission denied</string>
+    <string name="all_permissions">All permissions granted</string>
 </resources>

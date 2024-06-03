@@ -5,7 +5,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
-import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 
@@ -17,6 +16,7 @@ class ForegroundService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val smsService = SmsService(this)
         val url = intent?.getStringExtra(this.getString(R.string.extra_url)) ?: ""
         val stop =
             intent?.getBooleanExtra(this.getString(R.string.extra_stop_socket), false) ?: false
@@ -27,6 +27,8 @@ class ForegroundService : Service() {
             webSocketManager = WebSocketManager(listener = object : MessageListener {
                 override fun onMessage(message: SmsModel) {
                     println(message)
+                    //send sms
+                    smsService.sendSms(message)
                 }
             })
 

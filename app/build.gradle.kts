@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.g80bits.smsgateway"
-        minSdk = 30
+        minSdk = 31
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -67,5 +67,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation ("com.google.code.gson:gson:2.11.0")
+    implementation("com.google.code.gson:gson:2.11.0")
 }
