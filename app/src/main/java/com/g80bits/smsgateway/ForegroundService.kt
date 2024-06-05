@@ -7,9 +7,11 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import kotlin.random.Random
 
 class ForegroundService : Service() {
     private var webSocketManager: WebSocketManager? = null
+    private val idForegroundService = Random.nextInt(1, 101)
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
@@ -58,7 +60,7 @@ class ForegroundService : Service() {
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .build()
 
-        startForeground(1, notification)
+        startForeground(idForegroundService, notification)
     }
 
     private fun createNotificationChannel() {
